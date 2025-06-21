@@ -1,37 +1,61 @@
+// En src/ventanas/Home.tsx
+import { useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-// No es necesario importar CSS manualmente
 
-const Home = () => (
-  <div className="flex h-screen">
-    {/* Sidebar */}
-    <aside className="w-64 bg-blue-600 text-white flex flex-col py-8 px-4 space-y-4">
-      <h2 className="text-xl font-bold mb-6">Menú</h2>
-      <button className="py-2 px-4 hover:bg-blue-700 rounded">Mi Perfil</button>
-      <button className="py-2 px-4 hover:bg-blue-700 rounded">Opciones</button>
-      <button className="mt-auto py-2 px-4 bg-red-600 hover:bg-red-700 rounded">Cerrar Sesión</button>
-    </aside>
+const Home = () => {
+  const navigate = useNavigate();
 
-    {/* Contenido Principal */}
-    <div className="flex flex-col flex-grow">
-      {/* Barra superior */}
-      <header className="h-16 bg-white border-b flex items-center justify-end px-6 shadow-sm">
-        <img src="/profile.jpg" alt="Perfil" className="w-10 h-10 rounded-full" />
-      </header>
+  return (
+    <div className="home-container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <h2>Menú</h2>
+        <nav className="sidebar-nav">
+          <button
+            onClick={() => navigate('/perfil')}
+            className="sidebar-button"
+          >
+            Mi Perfil
+          </button>
+          <button className="sidebar-button">
+            Opciones
+          </button>
+        </nav>
+        <button className="sidebar-button logout-button">Cerrar Sesión</button>
+      </aside>
 
-      {/* Calendario */}
-      <main className="flex-grow bg-gray-100 p-6 overflow-auto">
-        <h1 className="text-2xl font-semibold mb-4">Calendario de Reservas</h1>
-        <div className="bg-white shadow rounded p-4">
-          <FullCalendar
-            plugins={[dayGridPlugin]}
-            initialView="dayGridMonth"
-            height="auto"
-          />
-        </div>
-      </main>
+      {/* Contenido principal */}
+      <div className="main-content">
+        {/* Barra superior */}
+        <header className="main-header">
+          <h1>Calendario de Reservas</h1>
+          {/* Asegúrate de tener una imagen en la carpeta public o ajusta la ruta */}
+          <img src="/profile.jpg" alt="Perfil" />
+        </header>
+
+        {/* Calendario */}
+        <main className="calendar-wrapper">
+          <div className="calendar-container">
+            <FullCalendar
+              plugins={[dayGridPlugin]}
+              initialView="dayGridMonth"
+              height="auto"
+              locale="es"
+              buttonText={{
+                today: 'Hoy',
+              }}
+              headerToolbar={{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,dayGridWeek,dayGridDay' // Opciones de vista
+              }}
+            />
+          </div>
+        </main>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Home;
