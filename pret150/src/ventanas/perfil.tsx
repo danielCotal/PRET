@@ -1,31 +1,69 @@
-import React from 'react';
-import Layout from '../components/layout';
+// En: src/ventanas/perfil.tsx (versión actualizada)
+
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Perfil: React.FC = () => {
-  const usuario = {
-    nombre: 'Daniel Pérez',
-    correo: 'daniel.perez@email.com',
-    rol: 'Administrador',
-    avatar: 'https://ui-avatars.com/api/?name=Daniel+Pérez'
+  const navigate = useNavigate();
+
+  // Obtenemos los datos del usuario desde localStorage
+  const userProfileString = localStorage.getItem('userProfile');
+  // Si no hay datos, usamos valores por defecto para evitar errores
+  const usuario = userProfileString 
+    ? JSON.parse(userProfileString) 
+    : { nombre: 'Invitado', correo: 'No disponible', rol: 'Usuario' };
+  
+  // Añadimos el avatar dinámico
+  usuario.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(usuario.nombre)}&background=3b82f6&color=fff`;
+
+  // Proteger la ruta: si no hay token, redirigir al login
+  useEffect(() => {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      navigate('/login');
+    }
+  }, [navigate]);
+  
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userProfile');
+    navigate('/login');
   };
 
   return (
-    <Layout titulo="Mi Perfil" volver>
-      <div className="flex justify-center items-center min-h-[calc(100vh-4rem)]"> {/* Centrado total */}
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-sm text-center">
+    <div className="home-container">
+      {/* Reutilizamos la misma estructura y clases que en Home.tsx */}
+      <aside className="sidebar">
+        <h2>Menú</h2>
+        <nav className="sidebar-nav">
+          <button onClick={() => navigate('/home')} className="sidebar-button">
+            Calendario
+          </button>
+          <button className="sidebar-button">
+            Opciones
+          </button>
+        </nav>
+        <button onClick={handleLogout} className="sidebar-button logout-button">
+          Cerrar Sesión
+        </button>
+      </aside>
+
+      {/* Aquí comienza el contenido específico de la página de perfil */}
+      <div className="profile-page-wrapper">
+        <div className="profile-card">
           <img
             src={usuario.avatar}
             alt="Avatar"
-            className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-blue-500"
+            className="profile-avatar"
           />
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{usuario.nombre}</h2>
-          <p className="text-gray-600 dark:text-gray-300">{usuario.correo}</p>
-          <span className="mt-2 inline-block text-sm bg-blue-100 dark:bg-blue-700 text-blue-800 dark:text-blue-100 px-3 py-1 rounded-full">
-            {usuario.rol}
+          <h2 className="profile-name">{usuario.nombre}</h2>
+          <p className="profile-email">{usuario.correo}</p>
+          <span className="profile-role-badge">
+            {usuario.rol || 'Usuario'}
           </span>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
