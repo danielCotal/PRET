@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './ventanas/Home';
 import Perfil from './ventanas/perfil';
 import Login from './ventanas/Login';
+import Register from './ventanas/Register';
 import { ProfileProvider } from './context/ProfileContext'; // 1. Importa el Provider
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <ProfileProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/" element={<Login />} />

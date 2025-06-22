@@ -262,3 +262,18 @@ body, html, #root {
   cursor: pointer;
   padding: 4px; /* Un pequeño borde interno */
 }
+.form-switcher-text {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.form-switcher-text a {
+  color: #1d4ed8;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-switcher-text a:hover {
+  text-decoration: underline;
+}
