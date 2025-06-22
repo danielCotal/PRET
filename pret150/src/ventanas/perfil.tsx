@@ -1,39 +1,39 @@
-// En: src/ventanas/perfil.tsx (versión actualizada)
-
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useProfile } from '../context/ProfileContext'; // 1. Importa el hook personalizado
 
 const Perfil: React.FC = () => {
   const navigate = useNavigate();
-
-  // Obtenemos los datos del usuario desde localStorage
-  const userProfileString = localStorage.getItem('userProfile');
-  // Si no hay datos, usamos valores por defecto para evitar errores
-  const usuario = userProfileString 
-    ? JSON.parse(userProfileString) 
-    : { nombre: 'Invitado', correo: 'No disponible', rol: 'Usuario' };
+  // 2. Obtenemos todo lo que necesitamos del Context con una sola línea
+  const { profile, avatarUrl, setUploadedImage, setAvatarColor } = useProfile();
   
-  // Añadimos el avatar dinámico
-  usuario.avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(usuario.nombre)}&background=3b82f6&color=fff`;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Proteger la ruta: si no hay token, redirigir al login
-  useEffect(() => {
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) {
-      navigate('/login');
-    }
-  }, [navigate]);
-  
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userProfile');
+    localStorage.clear();
     navigate('/login');
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string); // 3. Usamos la función del Context
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
     <div className="home-container">
-      {/* Reutilizamos la misma estructura y clases que en Home.tsx */}
+      {/* Sidebar */}
       <aside className="sidebar">
+        {/* ... (el sidebar no cambia) ... */}
         <h2>Menú</h2>
         <nav className="sidebar-nav">
           <button onClick={() => navigate('/home')} className="sidebar-button">
@@ -48,19 +48,30 @@ const Perfil: React.FC = () => {
         </button>
       </aside>
 
-      {/* Aquí comienza el contenido específico de la página de perfil */}
+      {/* Contenido principal */}
       <div className="profile-page-wrapper">
         <div className="profile-card">
+          <input type="file" ref={fileInputRef} onChange={handleImageChange} style={{ display: 'none' }} accept="image/*"/>
           <img
-            src={usuario.avatar}
+            src={avatarUrl} // 4. Usamos el avatarUrl del Context
             alt="Avatar"
-            className="profile-avatar"
+            className="profile-avatar profile-avatar-interactive"
+            onClick={handleAvatarClick}
+            title="Haz clic para cambiar la imagen"
           />
-          <h2 className="profile-name">{usuario.nombre}</h2>
-          <p className="profile-email">{usuario.correo}</p>
-          <span className="profile-role-badge">
-            {usuario.rol || 'Usuario'}
-          </span>
+          <h2 className="profile-name">{profile.nombre}</h2>
+          <p className="profile-email">{profile.correo}</p>
+          <span className="profile-role-badge">{profile.rol || 'Usuario'}</span>
+          <div className="color-picker-group">
+            <label htmlFor="avatarColor">Color del Fondo del Avatar</label>
+            <input
+              id="avatarColor"
+              type="color"
+              className="color-picker-input"
+              defaultValue={`#${'3b82f6'}`} // Valor inicial
+              onChange={(e) => setAvatarColor(e.target.value.substring(1))} // 5. Usamos la función del Context
+            />
+          </div>
         </div>
       </div>
     </div>
