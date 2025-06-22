@@ -1,68 +1,279 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
+body, html, #root {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(to bottom right, #3b82f6, #22c55e); /* Gradiente azul a verde */
+}
+
+/* Contenedor principal de la página Home */
+.home-container {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Barra lateral (Sidebar) */
+.sidebar {
+  width: 256px; /* Equivalente a w-64 de Tailwind */
+  background-color: #1d4ed8; /* Un azul oscuro */
+  color: white;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.sidebar h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sidebar-button {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: background-color 0.2s;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.sidebar-button:hover {
+  background-color: #3b82f6;
+}
+
+/* Botón de cerrar sesión al final */
+.logout-button {
+  margin-top: auto; /* Empuja el botón hacia abajo */
+  background-color: #dc2626; /* Color rojo */
+}
+
+.logout-button:hover {
+  background-color: #ef4444;
+}
+
+/* Contenedor del contenido principal a la derecha */
+.main-content {
+  flex-grow: 1; /* Ocupa el resto del espacio */
+  display: flex;
+  flex-direction: column;
+  background-color: #f3f4f6; /* Un gris muy claro de fondo */
+}
+
+/* Encabezado superior */
+.main-header {
+  height: 64px;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.main-header h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.main-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+}
+
+/* Área donde va el calendario */
+.calendar-wrapper {
+  flex-grow: 1; /* Ocupa el espacio vertical restante */
+  padding: 1.5rem;
+  overflow-y: auto; /* Permite scroll si el contenido es muy grande */
+}
+
+.calendar-container {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Pega esto al final de tu archivo src/index.css */
+
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* El fondo con gradiente ya lo aplica el body, así que no se necesita aquí */
+}
+
+.login-form-container {
+  background-color: white;
+  padding: 2rem 3rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-form-container h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  box-sizing: border-box; /* Importante para que el padding no afecte el ancho */
+}
+
+.login-button {
+  padding: 0.75rem;
+  border: none;
+  background-color: #1d4ed8;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover {
+  background-color: #2563eb;
+}
+
+/* Contenedor para la página de perfil, centrará la tarjeta */
+.profile-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  background-color: #f3f4f6; /* Mismo fondo gris que el wrapper del calendario */
+}
+
+/* La tarjeta de perfil */
+.profile-card {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 384px; /* Equivalente a max-w-sm */
+  text-align: center;
+}
+
+/* El avatar (imagen de perfil) */
+.profile-avatar {
+  width: 96px; /* w-24 */
+  height: 96px; /* h-24 */
+  border-radius: 50%; /* rounded-full */
+  margin: 0 auto 1rem; /* mx-auto mb-4 */
+  border: 3px solid #3b82f6; /* border-2 border-blue-500 */
+  object-fit: cover;
+}
+
+/* Nombre del usuario */
+.profile-name {
+  font-size: 1.5rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  color: #111827; /* text-gray-900 */
+}
+
+/* Correo del usuario */
+.profile-email {
+  color: #4b5563; /* text-gray-600 */
+  margin-top: 0.25rem;
+}
+
+/* "Badge" o "Pill" para el rol */
+.profile-role-badge {
+  margin-top: 1rem;
+  display: inline-block;
+  font-size: 0.875rem; /* text-sm */
+  background-color: #dbeafe; /* bg-blue-100 */
+  color: #1e40af; /* text-blue-800 */
+  padding: 0.25rem 0.75rem; /* px-3 py-1 */
+  border-radius: 9999px; /* rounded-full */
+  font-weight: 500;
+}
+.profile-avatar-interactive {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.profile-avatar-interactive:hover {
+  opacity: 0.8;
+}
+
+/* Contenedor para el selector de color */
+.color-picker-group {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.color-picker-group label {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.color-picker-input {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  padding: 4px; /* Un pequeño borde interno */
+}
+.form-switcher-text {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.form-switcher-text a {
+  color: #1d4ed8;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-switcher-text a:hover {
+  text-decoration: underline;
 }
