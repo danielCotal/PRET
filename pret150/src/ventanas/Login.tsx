@@ -1,47 +1,50 @@
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Importa Link
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  // Redirigir si ya hay un token
   useEffect(() => {
-    const authToken = localStorage.getItem('authToken');
-    if (authToken) {
+    if (localStorage.getItem('authToken')) {
       navigate('/home');
     }
   }, [navigate]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
-    // --- LÓGICA DE AUTENTICACIÓN ACTUALIZADA ---
-    const usersString = localStorage.getItem('users');
-    const users = usersString ? JSON.parse(usersString) : [];
+    try {
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // Buscamos un usuario que coincida con el email y la contraseña
-    const foundUser = users.find(
-      (user: any) => user.email === email && user.password === password
-    );
+      const data = await response.json();
 
-    if (foundUser) {
-      // Si el usuario se encuentra, procedemos a loguear
-      const fakeAuthToken = `token-para-${foundUser.email}`;
-      const userProfile = {
-        nombre: foundUser.nombre,
-        email: foundUser.email,
-        rol: foundUser.rol,
-      };
+      if (!response.ok) {
+        throw new Error(data.error || 'Ocurrió un error al iniciar sesión.');
+      }
 
-      localStorage.setItem('authToken', fakeAuthToken);
-      localStorage.setItem('userProfile', JSON.stringify(userProfile));
+      // ¡Guardamos el token y los datos del usuario!
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('userProfile', JSON.stringify(data.user));
       
-      navigate('/home');
-    } else {
-      // Si no se encuentra, mostramos un error
-      alert('Correo o contraseña incorrectos.');
+      // Forzamos un refresco para que el ProfileContext se actualice
+      window.location.href = '/home';
+
+    } catch (err: any) {
+      console.error('Error en el login:', err);
+      setError(err.message);
     }
   };
 
@@ -50,29 +53,18 @@ const Login = () => {
       <div className="login-form-container">
         <h2>Iniciar Sesión</h2>
         <form onSubmit={handleLogin} className="login-form">
+          {/* ... (los inputs del formulario no cambian) ... */}
           <div className="form-group">
             <label htmlFor="email">Correo Electrónico</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
           <button type="submit" className="login-button">Entrar</button>
         </form>
-        {/* Enlace para ir a la página de registro */}
+        {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
         <div className="form-switcher-text">
           ¿No tienes una cuenta? <Link to="/register">Crea una aquí</Link>
         </div>
