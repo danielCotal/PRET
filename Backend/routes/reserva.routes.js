@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { createReservation, getMyReservations } = require('../controllers/reserva.controller');
-const verifyToken = require('../middleware/auth.middleware');
+const verifyToken = require('../Middleware/auth.middleware');
 
 // TODAS las rutas de reservas requieren que el usuario esté autenticado.
 // Por eso, aplicamos el middleware a todas.
