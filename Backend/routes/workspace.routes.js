@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { getAllWorkspaces, getWorkspaceById, createWorkspace } = require('../controllers/workspace.controller');
-const verifyToken = require('../Middleware/auth.middleware'); // Suponiendo que crear espacios es para admins
+const verifyToken = require('../middleware/auth.middleware'); // Suponiendo que crear espacios es para admins
 
 // Rutas públicas
 router.get('/', getAllWorkspaces);
