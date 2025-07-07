@@ -399,3 +399,61 @@ body, html, #root {
     background-color: #3b82f6;
     font-weight: bold;
 }
+
+.profile-form {
+  width: 100%;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile-form .form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  box-sizing: border-box;
+}
+
+.success-message {
+  color: #16a34a; /* Un verde */
+  background-color: #f0fdf4;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.danger-zone {
+  margin-top: 2.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.danger-zone h4 {
+  margin: 0 0 0.5rem 0;
+  color: #dc2626;
+}
+
+.danger-zone p {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.button-danger {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #dc2626;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.button-danger:hover {
+  background-color: #b91c1c;
+}

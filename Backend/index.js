@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth.routes');
 const workspaceRoutes = require('./routes/workspace.routes');
 const reservationRoutes = require('./routes/reserva.routes');
 
+
 const app = express();
 
 // Middlewares
@@ -35,7 +36,7 @@ app.get('/api/test', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/workspaces', workspaceRoutes);
 app.use('/api/reservations', reservationRoutes);
-
+app.use('/api/users', userRoutes);
 // Ruta de bienvenida
 app.get('/', (req, res) => {
   res.send('API del Calendario corriendo.');
