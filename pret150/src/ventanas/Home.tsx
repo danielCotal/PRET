@@ -46,7 +46,7 @@ const Home = () => {
       'Authorization': `Bearer ${token}`,
       ...options.headers,
     };
-    const response = await fetch(url, { ...options, headers });
+    const response = await fetch(url.replace(/\/$/, ''), { ...options, headers });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Ocurrió un error en la petición.');
@@ -109,13 +109,27 @@ const Home = () => {
     };
 
     try {
-      const newReservation = await authenticatedFetch(`${apiUrl}/api/reservations`, {
+      // La API devuelve el objeto de reserva básico (sin el nombre del workspace)
+      const newReservationFromApi = await authenticatedFetch(`${apiUrl}/api/reservations`, {
         method: 'POST',
         body: JSON.stringify(reservationData),
       });
       
+      // *** INICIO DE LA CORRECCIÓN ***
+      // Buscamos los detalles completos del workspace en nuestro estado local.
+      const workspaceDetails = workspaces.find(ws => ws.id === newReservationFromApi.workspace_id);
+
+      // Creamos un objeto de reserva "completo" para la UI.
+      const fullNewReservation = {
+        ...newReservationFromApi,
+        workspace_name: workspaceDetails ? workspaceDetails.name : 'Espacio Desconocido',
+        workspace_type: workspaceDetails ? workspaceDetails.type : 'N/A',
+      };
+      
       // Actualizamos la lista de reservas localmente para que se refleje en la UI
-      setReservations(prev => [...prev, newReservation]);
+      setReservations(prev => [...prev, fullNewReservation]);
+      // *** FIN DE LA CORRECCIÓN ***
+
       setIsModalOpen(false);
       alert('¡Reserva creada con éxito!');
 
