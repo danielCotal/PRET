@@ -16,7 +16,7 @@ const Register = () => {
     setError(null); // Limpiamos errores previos
 
     try {
-      const response = await fetch(`${apiUrl}/api/auth/register`, {
+      const response = await fetch(`${apiUrl.replace(/\/$/, '')}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
